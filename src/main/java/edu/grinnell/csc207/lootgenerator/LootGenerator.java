@@ -4,9 +4,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
+/**
+ * The LootGenerator program simulates fighting monsters and collecting randomly
+ * generated loot based on Diablo-style mechanics.
+ */
 public class LootGenerator {
     /** The path to the dataset (either the small or large set). */
-    private static final String DATA_SET = "data/small";
+    private static final String DATA_SET = "data/large";
 
     public static List<String[]> monsters = new ArrayList<>();
     public static List<String[]> treasureClasses = new ArrayList<>();
@@ -20,6 +24,10 @@ public class LootGenerator {
         loadTreasureClasses();
         loadArmor();
         loadAffixes();
+        if (monsters.isEmpty()) {
+            System.err.println("Error: No monsters loaded. Check file path and format.");
+            return;
+        }
 
         while (true) {
             String monster = getRandomMonster();
@@ -36,25 +44,34 @@ public class LootGenerator {
             String prefix = generateAffix(prefixes, affixStats);
             String suffix = generateAffix(suffixes, affixStats);
 
-            if (!prefix.isEmpty())
+            if (!prefix.isEmpty()) {
                 fullItemName = prefix + " " + fullItemName;
-            if (!suffix.isEmpty())
+            }
+            if (!suffix.isEmpty()) {
                 fullItemName = fullItemName + " " + suffix;
-
+            }
             System.out.println(fullItemName);
             System.out.println(baseStat);
             for (String stat : affixStats) {
                 System.out.println(stat);
+            }
+            System.out.println("Fight again [y/n]?");
+            Scanner newScanner = new Scanner(System.in);
+            String response = newScanner.nextLine();
+            if (response.equalsIgnoreCase("n")) {
+                System.out.println("Thanks for playing!");
+                newScanner.close();
+                break;
             }
         }
     }
 
     /** Loads the monster data from the file. */
     static void loadMonsters() throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File(DATA_SET + "/monster.txt"));
+        Scanner scanner = new Scanner(new File(DATA_SET + "/monstats.txt"));
         while (scanner.hasNextLine()) {
             String[] parts = scanner.nextLine().split("\t");
-            if (parts.length >= 5) {
+            if (parts.length >= 4) {
                 monsters.add(parts);
             }
         }
@@ -63,7 +80,7 @@ public class LootGenerator {
 
     /** Loads the treasure class data from the file. */
     static void loadTreasureClasses() throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File(DATA_SET + "/TreasureClass.txt"));
+        Scanner scanner = new Scanner(new File(DATA_SET + "/TreasureClassEx.txt"));
         while (scanner.hasNextLine()) {
             String[] parts = scanner.nextLine().split("\t");
             if (parts.length >= 4) {
@@ -104,29 +121,34 @@ public class LootGenerator {
         suffixScanner.close();
     }
 
-    /** Generates a random monster name. */
-    /** @return a random monster name */
+    /**
+     * Generates a random monster name.
+     * 
+     * @return a random monster name
+     */
     static String getRandomMonster() {
         Random rand = new Random();
         return monsters.get(rand.nextInt(monsters.size()))[0];
     }
 
-    /** Generates a random treasure class for a given monster. */
     /**
+     * Generates a random treasure class for a given monster.
+     * 
      * @param monsterName the name of the monster
      * @return the treasure class for the monster
      */
     static String getTreasureClassForMonster(String monsterName) {
         for (String[] monster : monsters) {
             if (monster[0].equals(monsterName)) {
-                return monster[4];
+                return monster[3];
             }
         }
         return null;
     }
 
-    /** Generates a base item from the treasure class. */
     /**
+     * Generates a base item from the treasure class.
+     * 
      * @param treasureClass the treasure class
      * @return a base item from the treasure class
      */
@@ -149,8 +171,9 @@ public class LootGenerator {
         return null;
     }
 
-    /** Generates a base stat for the item. */
     /**
+     * Generates a base stat for the item.
+     * 
      * @param itemName the name of the item
      * @return the base stat for the item
      */
@@ -167,8 +190,9 @@ public class LootGenerator {
         return "Unknown Base Stat";
     }
 
-    /** Generates an affix for the item. */
     /**
+     * Generates an affix for the item.
+     * 
      * @param affixList  the list of affixes
      * @param affixStats the list to store affix stats
      * @return the generated affix
