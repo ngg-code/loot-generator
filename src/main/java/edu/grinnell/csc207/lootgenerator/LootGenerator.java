@@ -18,6 +18,12 @@ public class LootGenerator {
     public static List<String[]> prefixes = new ArrayList<>();
     public static List<String[]> suffixes = new ArrayList<>();
 
+    /**
+     * The main method that runs the LootGenerator program.
+     * 
+     * @param args command line arguments (not used)
+     * @throws FileNotFoundException if the data files are not found
+     */
     public static void main(String[] args) throws FileNotFoundException {
         System.out.println("This program kills monsters and generates loot!");
         loadMonsters();
@@ -107,16 +113,18 @@ public class LootGenerator {
         Scanner prefixScanner = new Scanner(new File(DATA_SET + "/MagicPrefix.txt"));
         while (prefixScanner.hasNextLine()) {
             String[] parts = prefixScanner.nextLine().split("\t");
-            if (parts.length >= 4)
+            if (parts.length >= 4){
                 prefixes.add(parts);
+            }
         }
         prefixScanner.close();
 
         Scanner suffixScanner = new Scanner(new File(DATA_SET + "/MagicSuffix.txt"));
         while (suffixScanner.hasNextLine()) {
             String[] parts = suffixScanner.nextLine().split("\t");
-            if (parts.length >= 4)
+            if (parts.length >= 4){
                 suffixes.add(parts);
+            }
         }
         suffixScanner.close();
     }
@@ -156,7 +164,7 @@ public class LootGenerator {
         Random rand = new Random();
         for (String[] tc : treasureClasses) {
             if (tc[0].equals(treasureClass)) {
-                String[] candidates = { tc[1], tc[2], tc[3] };
+                String[] candidates = {tc[1], tc[2], tc[3] };
                 while (true) {
                     String chosen = candidates[rand.nextInt(candidates.length)];
                     for (String[] armor : armorItems) {
