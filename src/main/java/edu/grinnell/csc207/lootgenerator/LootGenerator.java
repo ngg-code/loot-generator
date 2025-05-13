@@ -113,7 +113,7 @@ public class LootGenerator {
         Scanner prefixScanner = new Scanner(new File(DATA_SET + "/MagicPrefix.txt"));
         while (prefixScanner.hasNextLine()) {
             String[] parts = prefixScanner.nextLine().split("\t");
-            if (parts.length >= 4){
+            if (parts.length >= 4) {
                 prefixes.add(parts);
             }
         }
@@ -122,7 +122,7 @@ public class LootGenerator {
         Scanner suffixScanner = new Scanner(new File(DATA_SET + "/MagicSuffix.txt"));
         while (suffixScanner.hasNextLine()) {
             String[] parts = suffixScanner.nextLine().split("\t");
-            if (parts.length >= 4){
+            if (parts.length >= 4) {
                 suffixes.add(parts);
             }
         }
